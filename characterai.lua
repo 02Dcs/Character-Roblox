@@ -1,42 +1,14 @@
+--[[ 
+################ Beta Version ###########
+                Made by 020300
+]]
+
 local Http = game:GetService("HttpService")
 local Plrs = game:GetService("Players")
 local rp = game:GetService("ReplicatedStorage")
 
-
-local s = pcall(function()
-    local e = (getexecutorname and getexecutorname()) or
-              (identifyexecutor and identifyexecutor()) or
-              "?"
-                    
-    if not e:find("AWP") then
-        warn("AWP only!")
-        return false
-    end
-    
-    print("AWP: OK!")
-    
-    local t = request({
-        Url = "http://localhost:3000/test",
-        Method = "GET"
-    })
-    
-    if not t or not t.Success then
-        warn("No localhost!")
-        return false
-    end
-    
-    print("localhost: OK")
-    return true
-end)
-
-if not s then
-    warn("AWP only!")
-    return
-end
-
 -- loadstring(game:HttpGet("https://raw.githubusercontent.com/02Dcs/Character-Roblox/refs/heads/main/filtering.lua", true))() With Filter
 loadstring(game:HttpGet("https://raw.githubusercontent.com/02Dcs/Character-Roblox/refs/heads/main/bypass.lua", true))() -- Bypasses The Filter
-
 
 local _cfg = {}
 local cfg = setmetatable({
