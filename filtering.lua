@@ -1,50 +1,60 @@
 local ts = game:GetService("TextService")
-local plrs, tcs, rp = game:GetService("Players"), game:GetService("TextChatService"), game:GetService("ReplicatedStorage")
+local tcs, rp = game:GetService("TextChatService"),  game:GetService("ReplicatedStorage")
+
+local bl = {}
+pcall(function()
+    local r = request({Url = "https://raw.githubusercontent.com/02Dcs/Character-Roblox/refs/heads/main/blacklistwords.txt"})
+    if r and r.Body then bl = r.Body:gsub("%s+", " "):split(" ") end
+end)
+
+getgenv().lmsg = 0
+
+local function br(t)
+    local w = t:lower():split(" ")
+    for _, x in ipairs(w) do
+        if table.find(bl, x) then return true end
+    end
+    return false
+end
+
+local function can()
+    local n = tick()
+    if n - lmsg >= 1 then lmsg = n return true end
+    return false
+end
 
 local mt = getrawmetatable(game)
 local old = mt.__namecall
 setreadonly(mt, false)
 
 mt.__namecall = newcclosure(function(self, ...)
-    local args = {...}
+    local a = {...}
     local m = getnamecallmethod()
     
     if m == "FireServer" and self.Name == "SayMessageRequest" then
-        local msg = args[1]
-        if msg:find("#") then
-            if msg ~= "[Message Filtered]" then
-                local ce = rp:WaitForChild('DefaultChatSystemChatEvents')
-                ce:WaitForChild('SayMessageRequest'):FireServer("[Message Filtered]", "All")
+        local msg = a[1]
+        if msg:find("#") or br(msg) then
+            if msg ~= "[Message Filtered]" and can() then
+                rp:WaitForChild('DefaultChatSystemChatEvents'):WaitForChild('SayMessageRequest'):FireServer("[Message Filtered]", "All")
             end
             return
         end
     end
-    
     return old(self, ...)
 end)
 
 setreadonly(mt, true)
 
-tcs.OnIncomingMessage = function(msg)
-    if msg.Text:find("#") then
-        task.spawn(function()
-            if msg.Text ~= "[Message Filtered]" then
-                tcs.ChatInputBarConfiguration.TargetTextChannel:SendAsync("[Message Filtered]")
-            end
-        end)
-        return {
-            Text = "",
-            PrefixText = "",
-            Status = Enum.TextChatMessageStatus.Sending
-        }
+tcs.OnIncomingMessage = function(m)
+    if m.Text:find("#") or br(m.Text) then
+        if m.Text ~= "[Message Filtered]" and can() then
+            tcs.ChatInputBarConfiguration.TargetTextChannel:SendAsync("[Message Filtered]")
+        end
+        return {Text = "", PrefixText = "", Status = Enum.TextChatMessageStatus.Sending}
     end
-    return nil
 end
 
-tcs.SendingMessage:Connect(function(msg)
-    if msg.Text:find("#") then
-        return true
-    end
-    return false
+tcs.SendingMessage:Connect(function(m)
+    return m.Text:find("#") or br(m.Text)
 end)
 
