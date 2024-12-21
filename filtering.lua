@@ -1,10 +1,20 @@
 local ts = game:GetService("TextService")
 local tcs, rp = game:GetService("TextChatService"),  game:GetService("ReplicatedStorage")
 
+local function trim(str)
+    return str:gsub("^%s*(.-)%s*$", "%1")
+end
+
 local bl = {}
-pcall(function()
-    local r = request({Url = "https://raw.githubusercontent.com/02Dcs/Character-Roblox/refs/heads/main/blacklistwords.txt"})
-    if r and r.Body then bl = r.Body:gsub("%s+", " "):split(" ") end
+local success, response = pcall(function()
+    local r = request({
+        Url = "https://raw.githubusercontent.com/02Dcs/Character-Roblox/main/blacklistwords.txt",
+        Method = "GET"
+    })
+    if r and r.Success then
+        local cleaned = trim(r.Body:gsub("\r?\n", " "):gsub("%s+", " "))
+        bl = string.split(cleaned, " ")
+    end
 end)
 
 getgenv().lmsg = 0
