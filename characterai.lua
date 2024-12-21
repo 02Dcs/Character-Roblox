@@ -9,7 +9,7 @@ local rp = game:GetService("ReplicatedStorage")
 
 -- loadstring(game:HttpGet("https://raw.githubusercontent.com/02Dcs/Character-Roblox/refs/heads/main/filtering.lua", true))() With Filter
 loadstring(game:HttpGet("https://raw.githubusercontent.com/02Dcs/Character-Roblox/refs/heads/main/bypass.lua", true))() -- Bypasses The Filter
-loadstring(game:HttpGet("https://raw.githubusercontent.com/02Dcs/Character-Roblox/refs/heads/main/servercheck.lua", true))() -- Checks if the server is running
+loadstring(game:HttpGet("https://raw.githubusercontent.com/02Dcs/Character-Roblox/refs/heads/main/check.lua", true))() -- Checks if the server is running
 
 local _cfg = {}
 local cfg = setmetatable({
