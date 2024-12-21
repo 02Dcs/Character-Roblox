@@ -1,6 +1,5 @@
 local ts = game:GetService("TextService")
-local tc = game:GetService("TextChatService")
-local rp = game:GetService("ReplicatedStorage")
+local tc, rp = game:GetService("TextChatService"), game:GetService("ReplicatedStorage")
 local t = 0
 
 local l = {
