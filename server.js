@@ -59,18 +59,9 @@ app.post('/chat', async (req, res) => {
         const response = await aiChat.sendAndAwaitResponse(message, true);
         console.log("AI response:", response.text);
         
-    
-        const prefix = figlet.textSync('02dcs', {
-            font: 'Small',
-            horizontalLayout: 'default',
-            verticalLayout: 'default'
-        });
-        
-        const formattedResponse = `${prefix}\n${response.text}`;
-        
         res.json({ 
             filtered: false,
-            response: formattedResponse 
+            response: response.text 
         });
 
     } catch (error) {
