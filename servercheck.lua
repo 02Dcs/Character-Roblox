@@ -2,7 +2,7 @@ local function c()
     local s = pcall(function()
         local r = request({
             Url = "http://localhost:3000",
-            Method = "g"
+            Method = "GET"
         })
         
         if not r or not r.Success then
