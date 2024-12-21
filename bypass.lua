@@ -1,5 +1,6 @@
 local ts = game:GetService("TextService")
-local tc, rp = game:GetService("TextChatService"), game:GetService("ReplicatedStorage")
+local tc = game:GetService("TextChatService")
+local rp = game:GetService("ReplicatedStorage")
 local t = 0
 
 local l = {
@@ -50,6 +51,7 @@ local function g(w)
         f[w.."ed"] = cw(w.."ed")
         f[w.."s"] = cw(w.."s")
         f[w.."'s"] = cw(w.."'s")
+        f[w.."es"] = cw(w.."es")
     end
     return f
 end
