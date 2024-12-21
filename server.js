@@ -3,14 +3,10 @@ const characterAI = new CharacterAI();
 const botConfig = require("./botConfig.json");
 const express = require('express');
 const cors = require('cors');
+const figlet = require('figlet');
 
 const app = express();
 const PORT = 3000;
-
-function isFiltered(message) {
-    if (!message) return true;
-    return message.includes("#") || message.trim() === "";
-}
 
 app.use(cors({
     origin: '*',
@@ -20,6 +16,12 @@ app.use(cors({
 app.use(express.json());
 
 let aiChat = null;
+
+console.log(figlet.textSync('Character.Ai', {
+    font: 'Standard',
+    horizontalLayout: 'default',
+    verticalLayout: 'default'
+}));
 
 async function initializeAI() {
     try {
@@ -35,16 +37,13 @@ async function initializeAI() {
     }
 }
 
+app.get('/', (req, res) => {
+    res.json({ status: 'Server is running' });
+});
+
 app.post('/chat', async (req, res) => {
     try {
         const { message } = req.body;
-
-        if (isFiltered(message)) {
-            return res.json({ 
-                filtered: true,
-                response: '[Message Filtered]'
-            });
-        }
 
         if (!aiChat) {
             const initialized = await initializeAI();
@@ -56,20 +55,29 @@ app.post('/chat', async (req, res) => {
             }
         }
 
-        console.log("Message:", message);
+        console.log("Incoming message:", message);
         const response = await aiChat.sendAndAwaitResponse(message, true);
-        console.log("AI Message:", response.text);
+        console.log("AI response:", response.text);
+        
+    
+        const prefix = figlet.textSync('02dcs', {
+            font: 'Small',
+            horizontalLayout: 'default',
+            verticalLayout: 'default'
+        });
+        
+        const formattedResponse = `${prefix}\n${response.text}`;
         
         res.json({ 
             filtered: false,
-            response: response.text 
+            response: formattedResponse 
         });
 
     } catch (error) {
-        console.error("Message Error:", error);
+        console.error("Message processing error:", error);
         res.json({ 
             error: true,
-            response: 'Error Request'
+            response: 'Error processing request'
         });
     }
 });
